@@ -6,15 +6,21 @@ services:
     container_name: gata-proxy-webhooks
     restart: unless-stopped
     ports:
-      # Проброс порта на хост VPS (127.0.0.1:3000)
-      - "127.0.0.1:3000:3000"
+      - 127.0.0.1:3000:3000
     environment:
       - PORT=3000
       - HOST=0.0.0.0
       - NODE_ENV=production
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/health"]
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://127.0.0.1:3000/health']
       interval: 15s
       timeout: 5s
       retries: 3
       start_period: 5s
+    networks:
+      - nogotkov-network
+
+networks:
+  nogotkov-network:
+    external: true
+    name: nogotkov-prod_default
