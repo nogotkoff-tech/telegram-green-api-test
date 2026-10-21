@@ -1,0 +1,21 @@
+{
+  "name": "gata-green-api-tg-app-root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=@gata/app",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test:run --workspaces --if-present",
+    "test:watch": "npm run test --workspaces --if-present",
+    "test:coverage": "npm run test:coverage --workspaces --if-present",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "typescript": "^5.7.3"
+  }
+}
+

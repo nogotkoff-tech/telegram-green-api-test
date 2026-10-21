@@ -1,0 +1,26 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"useDefineForClassFields": true,
+		"lib": ["ES2022"],
+		"module": "ESNext",
+		"skipLibCheck": true,
+
+		/* Bundler mode */
+		"moduleResolution": "bundler",
+		"isolatedModules": true,
+		"moduleDetection": "force",
+		"declaration": true,
+		"declarationMap": true,
+		"emitDeclarationOnly": true,
+		"outDir": "./dist",
+
+		/* Strictness */
+		"strict": true,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noFallthroughCasesInSwitch": true,
+		"composite": true
+	},
+	"include": ["src"]
+}

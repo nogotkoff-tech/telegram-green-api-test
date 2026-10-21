@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"noEmit": true,
+
+		/* Path Aliases */
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"],
+			"@gata/shared": ["../shared/src/index.ts"]
+		},
+		"composite": true
+	},
+	"references": [{ "path": "../shared" }],
+	"include": ["src"]
+}
