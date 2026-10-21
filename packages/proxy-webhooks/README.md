@@ -79,37 +79,31 @@ npm run test --workspace=@gata/proxy-webhooks
 
 ---
 
-## Развертывание на VPS через Docker Compose
+## Развертывание на VPS
 
-В корне проекта подготовлен `docker-compose.yml`, который поднимает:
-1. `proxy-webhooks` — Node.js 22 контейнер (с многоэтапной сборкой и запуском от непривилегированного пользователя `node`).
-2. `nginx` — обратный прокси-сервер с настроенной потоковой передачей SSE (`proxy_buffering off`, таймауты 24 часа).
-3. `certbot` — контейнер для автоматического получения и продления SSL-сертификатов Let's Encrypt.
-
-### Команды для запуска на VPS:
+Если на вашем сервере уже есть главный Nginx (например, в `/opt/andrey-nogotkov.ru`), в текущем проекте запускается только контейнер `proxy-webhooks`:
 
 ```bash
-# 1. Запуск сервисов в фоновом режиме
 docker compose up -d --build
-
-# 2. Проверка статуса контейнеров
-docker compose ps
-
-# 3. Просмотр логов веб-сервера
-docker compose logs -f proxy-webhooks
-
-# 4. Проверка доступности через curl
-curl http://localhost/health
 ```
 
-### Настройка HTTPS (Let's Encrypt):
+Сервер начинает слушать порт `127.0.0.1:3000` на хосте.
 
-1. Получите SSL-сертификат:
-   ```bash
-   docker compose run --rm certbot certonly --webroot -w /var/www/certbot -d yourdomain.com
-   ```
-2. Скопируйте настройки из `nginx/conf.d/ssl.conf.example` в `nginx/conf.d/default.conf` и укажите ваш домен.
-3. Перезапустите Nginx:
-   ```bash
-   docker compose restart nginx
-   ```
+### Подключение к Nginx (`telegram-green-api-test.nogotech.online`):
+
+В папку конфигураций Nginx вашего основного проекта (например, `/opt/andrey-nogotkov.ru/nginx/conf.d/`) скопируйте файл `nginx/conf.d/telegram-green-api-test.nogotech.online.conf`.
+
+#### Обратите внимание на директиву `upstream`:
+* Если Nginx на VPS запущен в режиме `network_mode: host` — оставьте `server 127.0.0.1:3000;`.
+* Если Nginx в Docker bridge сети:
+  * Можно использовать IP адрес Docker-шлюза хоста: `server 172.17.0.1:3000;` (или `host.docker.internal:3000`).
+  * Либо подключить оба проекта к одной общей Docker-сети и проксировать напрямую: `server gata-proxy-webhooks:3000;`.
+
+### Получение SSL-сертификата Certbot для поддомена:
+```bash
+# Выполните на сервере через ваш существующий certbot контейнер:
+docker compose exec certbot certonly --webroot -w /var/www/certbot -d telegram-green-api-test.nogotech.online
+
+# Перезагрузите конфигурацию Nginx:
+docker compose exec nginx nginx -s reload
+```

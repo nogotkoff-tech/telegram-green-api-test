@@ -5,57 +5,16 @@ services:
       dockerfile: packages/proxy-webhooks/Dockerfile
     container_name: gata-proxy-webhooks
     restart: unless-stopped
+    ports:
+      # Проброс порта на хост VPS (127.0.0.1:3000)
+      - "127.0.0.1:3000:3000"
     environment:
       - PORT=3000
       - HOST=0.0.0.0
       - NODE_ENV=production
-    expose:
-      - "3000"
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:3000/health"]
       interval: 15s
       timeout: 5s
       retries: 3
       start_period: 5s
-    networks:
-      - gata-network
-
-  nginx:
-    image: nginx:alpine
-    container_name: gata-nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/certbot
-    depends_on:
-      proxy-webhooks:
-        condition: service_healthy
-    networks:
-      - gata-network
-
-  certbot:
-    image: certbot/certbot
-    container_name: gata-certbot
-    restart: unless-stopped
-    volumes:
-      - certbot-etc:/etc/letsencrypt
-      - certbot-var:/var/lib/letsencrypt
-      - web-root:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - gata-network
-
-networks:
-  gata-network:
-    driver: bridge
-
-volumes:
-  certbot-etc:
-  certbot-var:
-  web-root:
