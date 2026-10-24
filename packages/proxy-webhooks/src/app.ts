@@ -105,6 +105,13 @@ export function createApp(options: AppOptions = {}): {
 						candidateReceiveNotification,
 					);
 
+				console.log(
+					"candidateReceiveNotification = ",
+					candidateReceiveNotification,
+					"rawBody = ",
+					rawBody,
+				);
+
 				if (receiveNotificationParsed.success) {
 					const idInstance =
 						receiveNotificationParsed.data.body.instanceData.idInstance;
