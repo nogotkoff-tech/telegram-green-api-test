@@ -99,11 +99,7 @@ export function createApp(options: AppOptions = {}): {
 					return;
 				}
 
-				const candidateReceiveNotification =
-					"body" in rawBody && rawBody.body && typeof rawBody.body === "object"
-						? rawBody.body
-						: rawBody;
-
+				const candidateReceiveNotification = rawBody;
 				const receiveNotificationParsed =
 					ReceiveNotificationAPIResponseSchema.safeParse(
 						candidateReceiveNotification,
