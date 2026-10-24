@@ -6,7 +6,7 @@ WORKDIR /app
 # Copy root workspace manifests
 COPY package.json package-lock.json* ./
 COPY packages/shared/package.json ./packages/shared/
-COPY packages/ui/package.json ./packages/ui/
+COPY packages/ui-kit/package.json ./packages/ui-kit/
 COPY packages/app/package.json ./packages/app/
 COPY packages/proxy-webhooks/package.json ./packages/proxy-webhooks/
 
