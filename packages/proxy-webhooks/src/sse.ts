@@ -108,6 +108,7 @@ export class SSEManager {
 	): number {
 		let deliveredCount = 0;
 		const payload = typeof data === "string" ? data : JSON.stringify(data);
+		console.log("data in broadcast = ", data);
 		const message = `event: ${eventName}\ndata: ${payload}\n\n`;
 
 		for (const [clientId, client] of this.clients.entries()) {
