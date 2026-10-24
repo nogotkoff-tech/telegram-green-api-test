@@ -109,6 +109,10 @@ export function createApp(options: AppOptions = {}): {
 					const idInstance =
 						receiveNotificationParsed.data.body.instanceData.idInstance;
 
+					console.log(
+						"receiveNotificationParsed = ",
+						receiveNotificationParsed,
+					);
 					// Broadcast through SSE to connected clients
 					sseManager.broadcast(
 						receiveNotificationParsed,

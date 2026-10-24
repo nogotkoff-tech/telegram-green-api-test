@@ -85,14 +85,9 @@ export const ChatPage = () => {
 			eventSource.current = new EventSource(
 				`${import.meta.env.VITE_API_PROXY_WEBHOOKS_URL}/events?idInstance=${appInstanceState.idInstance}`,
 			);
-			messagesState.resetMessages();
 			isMounted.current = true;
 		}
-	}, [
-		loaderData.chatId,
-		messagesState.resetMessages,
-		appInstanceState.idInstance,
-	]);
+	}, [loaderData.chatId, appInstanceState.idInstance]);
 
 	return (
 		<ChatWindow key={loaderData.chatId}>
