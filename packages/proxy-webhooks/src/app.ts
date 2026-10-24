@@ -93,7 +93,7 @@ export function createApp(options: AppOptions = {}): {
 			response: Response,
 		) => {
 			try {
-				const rawBody = request.body;
+				const rawBody = request;
 				if (!rawBody || typeof rawBody !== "object") {
 					response.status(400).send("Invalid body: JSON object expected");
 					return;
@@ -105,21 +105,10 @@ export function createApp(options: AppOptions = {}): {
 						candidateReceiveNotification,
 					);
 
-				console.log(
-					"candidateReceiveNotification = ",
-					candidateReceiveNotification,
-					"rawBody = ",
-					rawBody,
-				);
-
 				if (receiveNotificationParsed.success) {
 					const idInstance =
 						receiveNotificationParsed.data.body.instanceData.idInstance;
 
-					console.log(
-						"receiveNotificationParsed = ",
-						receiveNotificationParsed,
-					);
 					// Broadcast through SSE to connected clients
 					sseManager.broadcast(
 						receiveNotificationParsed,
