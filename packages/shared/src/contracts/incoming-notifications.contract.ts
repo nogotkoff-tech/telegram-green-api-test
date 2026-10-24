@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ChatId, ChatTypeUnion, MessageId } from "./brands.data";
+import { ChatId, ChatTypeUnion, MessageId } from "./сommon.contracts";
 
 export const ReceiptId = z.number();
 export type TReceiptId = z.infer<typeof ReceiptId>;
@@ -38,7 +38,7 @@ export type IncomingTextMessageNotificationsFormat = z.infer<
 
 export const ReceiveNotificationAPIResponseSchema = z.object({
 	receiptId: ReceiptId,
-	body: z.union([IncomingTextMessageNotificationsFormatSchema, z.unknown()]),
+	body: IncomingTextMessageNotificationsFormatSchema,
 });
 export type ReceiveNotificationAPIResponse = z.infer<
 	typeof ReceiveNotificationAPIResponseSchema

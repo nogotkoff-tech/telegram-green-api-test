@@ -1,13 +1,13 @@
+import { StrictMode } from "react";
 import { RouterProvider } from "react-router-dom";
-import { QueryProvider } from "./providers";
 import { router } from "./routes";
 
 export const App = () => {
 	return (
 		<div data-testid="app-root">
-			<QueryProvider>
+			<StrictMode>
 				<RouterProvider router={router} />
-			</QueryProvider>
+			</StrictMode>
 		</div>
 	);
 };

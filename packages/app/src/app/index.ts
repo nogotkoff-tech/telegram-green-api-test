@@ -1,4 +1,2 @@
-export * from './App';
-export * from './providers';
-export * from './routes';
-
+export * from "./App";
+export * from "./routes";

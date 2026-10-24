@@ -1,3 +1,4 @@
+export * from "./contacts.contracts";
 export * from "./credentials.contract";
 export * from "./incoming-notifications.contract";
 export * from "./sending.contracts";

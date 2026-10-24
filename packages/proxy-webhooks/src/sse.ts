@@ -73,8 +73,6 @@ export class SSEManager {
 		};
 
 		req.on("close", cleanup);
-		req.on("error", cleanup);
-		res.on("close", cleanup);
 		res.on("error", cleanup);
 
 		return client;
@@ -105,7 +103,7 @@ export class SSEManager {
 	 */
 	public broadcast(
 		data: unknown,
-		idInstance?: number | null,
+		_idInstance?: number | null,
 		eventName = "message",
 	): number {
 		let deliveredCount = 0;
@@ -113,16 +111,6 @@ export class SSEManager {
 		const message = `event: ${eventName}\ndata: ${payload}\n\n`;
 
 		for (const [clientId, client] of this.clients.entries()) {
-			// If client requested a specific instance, only send if it matches
-			if (
-				client.idInstance !== undefined &&
-				idInstance !== undefined &&
-				idInstance !== null &&
-				client.idInstance !== idInstance
-			) {
-				continue;
-			}
-
 			try {
 				client.res.write(message);
 				deliveredCount++;

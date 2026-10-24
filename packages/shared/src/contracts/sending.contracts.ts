@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ChatId } from "./brands.data";
+import { ChatId } from "./сommon.contracts";
 
 /** Тело запрос для отправки сообщения */
 export const SendMessageRequestBodySchema = z.object({

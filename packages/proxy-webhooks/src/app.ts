@@ -1,6 +1,6 @@
 import {
-	IncomingTextMessageNotificationsFormatSchema,
 	type ReceiveNotificationAPIResponse,
+	ReceiveNotificationAPIResponseSchema,
 } from "@gata/shared";
 import express, { type Express, type Request, type Response } from "express";
 import { ZodError } from "zod";
@@ -99,46 +99,54 @@ export function createApp(options: AppOptions = {}): {
 					return;
 				}
 
-				// Support both wrapped webhook { receiptId, body: { ... } } and direct notification { ... }
-				const candidateBody =
+				const candidateReceiveNotification =
 					"body" in rawBody && rawBody.body && typeof rawBody.body === "object"
 						? rawBody.body
 						: rawBody;
 
-				// Validate text message format schema
-				const textMessageFormatParsed =
-					IncomingTextMessageNotificationsFormatSchema.safeParse(candidateBody);
+				const receiveNotificationParsed =
+					ReceiveNotificationAPIResponseSchema.safeParse(
+						candidateReceiveNotification,
+					);
 
-				if (textMessageFormatParsed.success) {
-					const textMessageFormatBody = textMessageFormatParsed.data;
-					const idInstance = textMessageFormatBody.instanceData.idInstance;
+				if (receiveNotificationParsed.success) {
+					const idInstance =
+						receiveNotificationParsed.data.body.instanceData.idInstance;
 
 					// Broadcast through SSE to connected clients
-					sseManager.broadcast(textMessageFormatBody, idInstance, "message");
+					sseManager.broadcast(
+						receiveNotificationParsed,
+						idInstance,
+						"message",
+					);
 
-					response.status(200).send(textMessageFormatBody);
+					response.status(200).send(receiveNotificationParsed);
 					return;
 				}
 
 				// If it is another valid Green API webhook notification (e.g. status, image, etc.)
 				if (
-					"typeWebhook" in candidateBody &&
-					typeof candidateBody.typeWebhook === "string"
+					"typeWebhook" in candidateReceiveNotification &&
+					typeof candidateReceiveNotification.typeWebhook === "string"
 				) {
-					const anyNotification = candidateBody as {
+					const anyNotification = candidateReceiveNotification as {
 						typeWebhook: string;
 						instanceData?: { idInstance?: number };
 					};
 					const idInstance = anyNotification.instanceData?.idInstance;
 
-					sseManager.broadcast(candidateBody, idInstance, "message");
+					sseManager.broadcast(
+						candidateReceiveNotification,
+						idInstance,
+						"message",
+					);
 
-					response.status(200).send(candidateBody);
+					response.status(200).send(candidateReceiveNotification);
 					return;
 				}
 
 				// If it doesn't match schema or webhook structure, throw Zod error
-				throw textMessageFormatParsed.error;
+				throw receiveNotificationParsed.error;
 			} catch (error: unknown) {
 				if (error instanceof ZodError) {
 					response.status(400).send(error.message);

@@ -1,10 +1,11 @@
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_API_BASE_URL?: string;
-  // More env variables can be declared here...
+	readonly VITE_API_BASE_URL?: string;
+	readonly VITE_API_PROXY_WEBHOOKS_URL?: string;
+	// More env variables can be declared here...
 }
 
 interface ImportMeta {
-  readonly env: ImportMetaEnv;
+	readonly env: ImportMetaEnv;
 }

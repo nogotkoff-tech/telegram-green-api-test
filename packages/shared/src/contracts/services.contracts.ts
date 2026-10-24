@@ -1,44 +1,30 @@
 import { z } from "zod";
-import { ChatId, ChatTypeUnion } from "./brands.data";
+import { ChatId, ChatTypeUnion } from "./сommon.contracts";
 
 /** Проверить аккаунт на наличие контактов */
-export const CheckAccountAPIResponseSchema = z.object({
-	exists: z.boolean(),
+export const CheckAccountResponseSchema = z.object({
+	exist: z.boolean(),
 	chatId: ChatId,
 	username: z.string(),
 	phoneNumber: z.number(),
 	fromCache: z.boolean(),
 });
-export type TCheckAccountAPIResponse = z.infer<
-	typeof CheckAccountAPIResponseSchema
+export type TCheckAccountResponse = z.infer<typeof CheckAccountResponseSchema>;
+export const CheckAccountRequestBodySchema = z.object({
+	phoneNumber: z.string().or(z.number()),
+});
+export type TCheckAccountRequestBody = z.infer<
+	typeof CheckAccountRequestBodySchema
 >;
 
 /** Информация о чате */
-const ChatAPIResponseSchema = z.object({
+const ChatResponseSchema = z.object({
 	chatId: ChatId,
 	name: z.string(),
 	type: ChatTypeUnion,
-	phoneNumber: z.string(),
+	phoneNumber: z.number(),
 	username: z.string(),
 });
 /** Получить список чатов */
-export const GetChatsAPIResponseSchema = z.array(ChatAPIResponseSchema);
-export type TGetChatsAPIResponse = z.infer<typeof GetChatsAPIResponseSchema>;
-
-/** Получить полную информацию о существующем контакте */
-export const GetContactInfoSchema = z.object({
-	avatar: z.string(),
-	name: z.string(),
-	contactName: z.string(),
-	chatId: ChatId,
-	chatType: ChatTypeUnion,
-	lastSeen: z.number(),
-	phoneNumber: z.number(),
-	phoneNumberTimestamp: z.number(),
-	username: z.string(),
-	isPremium: z.boolean(),
-	isVerified: z.boolean(),
-	isScam: z.boolean(),
-	description: z.string(),
-});
-export type TGetContactInfo = z.infer<typeof GetContactInfoSchema>;
+export const GetChatsResponseSchema = z.array(ChatResponseSchema).default([]);
+export type TGetChatsResponse = z.infer<typeof GetChatsResponseSchema>;
